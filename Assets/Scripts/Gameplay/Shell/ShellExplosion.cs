@@ -33,16 +33,24 @@ namespace Tanks
 
         private void TryDamageTanks()
         {
+            if (!PhotonNetwork.IsMasterClient)
+            {
+                return;
+            }
             Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius, tankMask);
 
             for (int i = 0; i < colliders.Length; i++)
             {
-                var tankManager = colliders[i].GetComponent<TankManager>();
-                if (tankManager == null) continue;
+                var photonView = colliders[i].GetComponent<PhotonView>();
+                if (photonView == null)
+                {
+                    continue;
+                }
 
-                Rigidbody targetRigidbody = tankManager.GetComponent<Rigidbody>();
-                tankManager.OnHit(explosionForce, transform.position, explosionRadius,
-                    CalculateDamage(targetRigidbody.position));
+                Rigidbody targetRigidbody = photonView.GetComponent<Rigidbody>();
+                //tankManager.OnHit(explosionForce, transform.position, explosionRadius, CalculateDamage(targetRigidbody.position));
+
+                photonView.RPC("OnHit", photonView.Owner, explosionForce, transform.position, explosionRadius, CalculateDamage(targetRigidbody.position));
             }
         }
 

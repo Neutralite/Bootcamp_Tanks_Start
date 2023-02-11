@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Photon.Pun;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Tanks
@@ -17,6 +18,9 @@ namespace Tanks
         public float maxLaunchForce = 30f;
         public float maxChargeTime = 0.75f;
 
+        private PhotonView photonView;
+
+
         private float currentLaunchForce;
         private float chargeSpeed;
         private bool fired;
@@ -29,13 +33,17 @@ namespace Tanks
 
         private void Start()
         {
+            photonView = GetComponent<PhotonView>();
             chargeSpeed = (maxLaunchForce - minLaunchForce) / maxChargeTime;
         }
 
         private void Update()
         {
             // TODO: Only allow owner of this tank to shoot
-
+            if (!photonView.IsMine)
+            {
+                return;
+            }
             aimSlider.value = minLaunchForce;
 
             if (currentLaunchForce >= maxLaunchForce && !fired)
@@ -68,13 +76,20 @@ namespace Tanks
             fired = true;
 
             // TODO: Instantiate the projectile on all clients
-            Rigidbody shellInstance = Instantiate(shell, fireTransform.position, fireTransform.rotation);
-            shellInstance.velocity = currentLaunchForce * fireTransform.forward;
+            photonView.RPC("Fire",RpcTarget.All,fireTransform.position,fireTransform.rotation,currentLaunchForce * fireTransform.forward);
+
+            currentLaunchForce = minLaunchForce;
+        }
+
+        [PunRPC]
+        private void Fire(Vector3 position, Quaternion rotation, Vector3 velocity)
+        {
+            Rigidbody shellInstance = Instantiate(shell, position, rotation);
+            shellInstance.velocity = velocity;
 
             shootingAudio.clip = fireClip;
             shootingAudio.Play();
 
-            currentLaunchForce = minLaunchForce;
-        }
+        } 
     }
 }

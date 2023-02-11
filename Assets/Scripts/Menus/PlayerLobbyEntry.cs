@@ -33,7 +33,16 @@ namespace Tanks
             } 
         }  
 
-        public bool IsPlayerReady { get; set; } // TODO: Update player ready status to other clients
+        public bool IsPlayerReady 
+        { 
+            get => player.CustomProperties.ContainsKey("IsReady") && (bool)player.CustomProperties["IsReady"];
+
+            set
+            {
+                Hashtable hash = new Hashtable { { "IsReady", value } };
+                player.SetCustomProperties(hash);
+            }
+        } // TODO: Update player ready status to other clients
 
         private bool IsLocalPlayer => Equals(player,PhotonNetwork.LocalPlayer); // TODO: Get if this entry belongs to the local player
 
@@ -75,6 +84,7 @@ namespace Tanks
 
         private void Start()
         {
+            Debug.Assert(PhotonNetwork.CurrentRoom.MaxPlayers == teamBackgrounds.Count, "Uncorrect number of team bckrounds.");
             waitingButton.onClick.AddListener(() => OnReadyButtonClick(true));
             readyButton.onClick.AddListener(() => OnReadyButtonClick(false));
             changeTeamButton.onClick.AddListener(OnChangeTeamButtonClicked);

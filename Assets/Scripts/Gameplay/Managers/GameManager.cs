@@ -1,3 +1,6 @@
+using ExitGames.Client.Photon;
+using Photon.Pun;
+using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,8 +17,9 @@ namespace Tanks
         public Color color;
     }
 
-    public class GameManager : MonoBehaviour
+    public class GameManager : MonoBehaviour,IOnEventCallback
     {
+        private const int ROUND_START_PHOTON_EVENT = 1;
         private const float MAX_DEPENETRATION_VELOCITY = float.PositiveInfinity;
 
         [Header("Balance")]
@@ -52,14 +56,25 @@ namespace Tanks
             StartRound();
         }
 
+        private void OnEnable()
+        {
+            PhotonNetwork.AddCallbackTarget(this);
+        }
+
+        private void OnDisable()
+        {
+            PhotonNetwork.RemoveCallbackTarget(this);
+
+        }
+
         private void SpawnPlayerTank()
         {
             // TODO: Get team from photon
-            var team = 1;
+            var team = (int)PhotonNetwork.LocalPlayer.CustomProperties["Team"];
             var config = teamConfigs[team];
             var spawnPoint = config.spawnPoint;
 
-            Instantiate(tankPrefab, spawnPoint.position, spawnPoint.rotation);
+            PhotonNetwork.Instantiate(tankPrefab.name, spawnPoint.position, spawnPoint.rotation);
         }
 
         private void StartRound()
@@ -100,6 +115,7 @@ namespace Tanks
             if (gameWinner != null)
             {
                 // TODO: Leave photon room
+                PhotonNetwork.LeaveRoom();
                 SceneManager.LoadScene("MainMenu");
             }
             else StartRound();
@@ -183,6 +199,14 @@ namespace Tanks
             if (!OneTankLeft()) yield break;
 
             StartCoroutine(RoundEnding());
+        }
+
+        public void OnEvent(EventData photonEvent)
+        {
+            if (photonEvent.Code == TankHealth.TANK_DIED_PHOTON_EVENT)
+            {
+                StartCoroutine(HandleTankDeath());
+            }
         }
     }
 }
