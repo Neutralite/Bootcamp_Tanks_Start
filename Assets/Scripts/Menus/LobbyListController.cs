@@ -21,13 +21,16 @@ namespace Tanks
 
         private Dictionary<string, LobbyListEntry> entries;
 
+
         public override void OnJoinedRoom()
         {
             SceneManager.LoadScene("RoomLobby");
         }
+
         private void AddNewLobbyEntry(RoomInfo roomInfo)
         {
             var entry = Instantiate(lobbyListEntryPrefab, entriesHolder);
+
             entry.Setup(roomInfo);
             entries.Add(roomInfo.Name, entry);
         }
@@ -47,10 +50,12 @@ namespace Tanks
             SceneManager.LoadScene("MainMenu");
         }
 
-        // Create, Update and Remove room entries
+        // TODO: Create, Update and Remove room entries
+
         public override void OnRoomListUpdate(List<RoomInfo> roomList)
         {
             Debug.LogWarning("Room list updated");
+
             foreach (RoomInfo roomInfo in roomList)
             {
                 if (roomInfo.RemovedFromList)
@@ -84,8 +89,8 @@ namespace Tanks
             Destroy(entries[roomInfo.Name].gameObject);
             entries.Remove(roomInfo.Name);
         }
-
         private bool IsRoomUnlisted(RoomInfo roomInfo) => !roomInfo.IsVisible || roomInfo.PlayerCount == 0 || !roomInfo.IsOpen;
+
         private void Start()
         {
             LoadingGraphics.Disable();
@@ -106,7 +111,8 @@ namespace Tanks
 
         private void DestroyHolderChildren()
         {
-            for (var i = entriesHolder.childCount - 1; i >= 0; i--) {
+            for (var i = entriesHolder.childCount - 1; i >= 0; i--)
+            {
                 Destroy(entriesHolder.GetChild(i).gameObject);
             }
         }

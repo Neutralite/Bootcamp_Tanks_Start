@@ -21,21 +21,21 @@ namespace Tanks
         [SerializeField] private List<Sprite> teamBackgrounds;
 
         private Player player;
-        public int PlayerTeam 
+
+        public int PlayerTeam
         {
-            // Update player team to other clients
-            get => player.CustomProperties.ContainsKey("Team")? (int)player.CustomProperties["Team"]:0;
-            set 
+            //Update player team to other clients
+            get => player.CustomProperties.ContainsKey("Team") ? (int)player.CustomProperties["Team"] : 0;
+            set
             {
                 Hashtable hash = new Hashtable { { "Team", value } };
                 player.SetCustomProperties(hash);
-            
-            } 
-        }  
+            }
+        }
 
         public bool IsPlayerReady { get; set; } // TODO: Update player ready status to other clients
 
-        private bool IsLocalPlayer => Equals(player,PhotonNetwork.LocalPlayer); // TODO: Get if this entry belongs to the local player
+        private bool IsLocalPlayer => Equals(player, PhotonNetwork.LocalPlayer); // TODO: Get if this entry belongs to the local player
 
         public void Setup()
         {
@@ -53,18 +53,19 @@ namespace Tanks
 
             if (IsLocalPlayer)
             {
-                PlayerTeam = (player.ActorNumber - 1)%PhotonNetwork.CurrentRoom.MaxPlayers;
-
-                playerName.text = player.NickName;
-
-                if (!IsLocalPlayer)
-                {
-                    Destroy(changeTeamButton);
-                }
-
-                UpdateVisuals();
+                PlayerTeam = (player.ActorNumber - 1) % PhotonNetwork.CurrentRoom.MaxPlayers;
             }
+
+            playerName.text = player.NickName;
+
+            if (!IsLocalPlayer)
+            {
+                Destroy(changeTeamButton);
+            }
+
+            UpdateVisuals();
         }
+
         public void UpdateVisuals()
         {
             teamHolder.sprite = teamBackgrounds[PlayerTeam];

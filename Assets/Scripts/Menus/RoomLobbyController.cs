@@ -21,6 +21,7 @@ namespace Tanks
         private Dictionary<Player, PlayerLobbyEntry> lobbyEntries;
 
         private bool IsEveryPlayerReady => lobbyEntries.Values.ToList().TrueForAll(entry => entry.IsPlayerReady);
+
         public override void OnPlayerEnteredRoom(Player newPlayer)
         {
             AddLobbyEntry(newPlayer);
@@ -59,6 +60,7 @@ namespace Tanks
         {
             Destroy(lobbyEntries[otherPlayer].gameObject);
             lobbyEntries.Remove(otherPlayer);
+
             UpdateStartButton();
         }
 
@@ -73,6 +75,7 @@ namespace Tanks
         {
             UpdateStartButton();
         }
+
         private void UpdateStartButton()
         {
             // Show start button only to the master client and when all players are ready
@@ -84,7 +87,7 @@ namespace Tanks
             // Load gameplay level for all clients
             if (!PhotonNetwork.IsMasterClient)
             {
-                Debug.LogError("Only the master client can start the game");
+                Debug.LogError("trying to start game while not masterclient");
                 return;
             }
 
@@ -97,9 +100,11 @@ namespace Tanks
             // TODO: Leave room
             SceneManager.LoadScene("MainMenu");
         }
+
         private void DestroyHolderChildren()
         {
-            for (var i = entriesHolder.childCount - 1; i >= 0; i--) {
+            for (var i = entriesHolder.childCount - 1; i >= 0; i--)
+            {
                 Destroy(entriesHolder.GetChild(i).gameObject);
             }
         }
