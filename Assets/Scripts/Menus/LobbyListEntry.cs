@@ -28,7 +28,7 @@ namespace Tanks
             roomInfo = info;
 
             lobbyNameText.text = info.Name;
-            lobbyPlayerCountText.text = $"{info.PlayerCount} / {info.MaxPlayers}";
+            lobbyPlayerCountText.text = $"{info.PlayerCount}/{info.MaxPlayers}";
         }
 
         private void Start()

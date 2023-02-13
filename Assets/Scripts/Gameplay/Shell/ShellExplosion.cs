@@ -37,20 +37,28 @@ namespace Tanks
             {
                 return;
             }
+
             Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius, tankMask);
 
             for (int i = 0; i < colliders.Length; i++)
             {
                 var photonView = colliders[i].GetComponent<PhotonView>();
-                if (photonView == null)
+                if(photonView == null)
                 {
                     continue;
                 }
 
                 Rigidbody targetRigidbody = photonView.GetComponent<Rigidbody>();
-                //tankManager.OnHit(explosionForce, transform.position, explosionRadius, CalculateDamage(targetRigidbody.position));
+                //tankManager.OnHit(explosionForce, transform.position, explosionRadius,
+                //CalculateDamage(targetRigidbody.position));
 
-                photonView.RPC("OnHit", photonView.Owner, explosionForce, transform.position, explosionRadius, CalculateDamage(targetRigidbody.position));
+                photonView.RPC(
+                    "OnHit",
+                    photonView.Owner,
+                    explosionForce,
+                    transform.position,
+                    explosionRadius,
+                    CalculateDamage(targetRigidbody.position));
             }
         }
 

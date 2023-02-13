@@ -12,7 +12,7 @@ namespace Tanks
         private TankHealth tankHealth;
         private GameObject canvasGameObject;
 
-        // TODO: Get player nickname
+        // Get player nickname
         private Player player;
         private PhotonView photonView;
         public string ColoredPlayerName => $"<color=#{ColorUtility.ToHtmlStringRGB(teamConfig.color)}>Nickname</color>";
@@ -29,9 +29,8 @@ namespace Tanks
         {
             SetupComponents();
 
-            // TODO: Get team from photon
+            // Get team from photon
             player = photonView.Owner;
-
             teamConfig = FindObjectOfType<GameManager>().RegisterTank(this, (int)player.CustomProperties["Team"]);
 
             SetupRenderers();

@@ -1,8 +1,8 @@
-using Photon.Pun;
-using Photon.Realtime;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
+using Photon.Realtime;
 
 namespace Tanks
 {
@@ -22,8 +22,11 @@ namespace Tanks
             if (string.IsNullOrEmpty(lobbyNameInput.text)) return;
 
             // Create room
-
-            RoomOptions roomOptions = new RoomOptions { IsOpen = true, MaxPlayers = 4 };
+            RoomOptions roomOptions = new RoomOptions
+            {
+                IsOpen = true,
+                MaxPlayers = 4
+            };
             PhotonNetwork.CreateRoom(lobbyNameInput.text, roomOptions, TypedLobby.Default);
         }
 

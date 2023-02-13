@@ -21,30 +21,33 @@ namespace Tanks
         [SerializeField] private List<Sprite> teamBackgrounds;
 
         private Player player;
+
         public int PlayerTeam 
         {
-            // Update player team to other clients
-            get => player.CustomProperties.ContainsKey("Team")? (int)player.CustomProperties["Team"]:0;
+            //Update player team to other clients
+            get => player.CustomProperties.ContainsKey("Team") ? (int)player.CustomProperties["Team"] : 0 ;
             set 
             {
                 Hashtable hash = new Hashtable { { "Team", value } };
                 player.SetCustomProperties(hash);
-            
-            } 
-        }  
+            }
+        }
 
+        /// <summary>
+        /// Update player ready status to other clients
+        /// </summary>
         public bool IsPlayerReady 
         { 
             get => player.CustomProperties.ContainsKey("IsReady") && (bool)player.CustomProperties["IsReady"];
-
             set
             {
                 Hashtable hash = new Hashtable { { "IsReady", value } };
                 player.SetCustomProperties(hash);
-            }
-        } // TODO: Update player ready status to other clients
+            } 
+        
+        }
 
-        private bool IsLocalPlayer => Equals(player,PhotonNetwork.LocalPlayer); // TODO: Get if this entry belongs to the local player
+        private bool IsLocalPlayer => Equals(player, PhotonNetwork.LocalPlayer ); // TODO: Get if this entry belongs to the local player
 
         public void Setup()
         {
@@ -62,18 +65,19 @@ namespace Tanks
 
             if (IsLocalPlayer)
             {
-                PlayerTeam = (player.ActorNumber - 1)%PhotonNetwork.CurrentRoom.MaxPlayers;
-
-                playerName.text = player.NickName;
-
-                if (!IsLocalPlayer)
-                {
-                    Destroy(changeTeamButton);
-                }
-
-                UpdateVisuals();
+                PlayerTeam = (player.ActorNumber -1) % PhotonNetwork.CurrentRoom.MaxPlayers;
             }
+
+            playerName.text = player.NickName;
+
+            if (!IsLocalPlayer)
+            {
+                Destroy(changeTeamButton);
+            }
+
+            UpdateVisuals();
         }
+
         public void UpdateVisuals()
         {
             teamHolder.sprite = teamBackgrounds[PlayerTeam];
@@ -84,7 +88,8 @@ namespace Tanks
 
         private void Start()
         {
-            Debug.Assert(PhotonNetwork.CurrentRoom.MaxPlayers == teamBackgrounds.Count, "Uncorrect number of team bckrounds.");
+            Debug.Assert(PhotonNetwork.CurrentRoom.MaxPlayers == teamBackgrounds.Count, "Incorrect number of team backgrounds");
+
             waitingButton.onClick.AddListener(() => OnReadyButtonClick(true));
             readyButton.onClick.AddListener(() => OnReadyButtonClick(false));
             changeTeamButton.onClick.AddListener(OnChangeTeamButtonClicked);

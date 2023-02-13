@@ -66,6 +66,7 @@ namespace Tanks
             {
                 return;
             }
+
             movementInputValue = Input.GetAxis (MOVEMENT_AXIS_NAME);
             turnInputValue = Input.GetAxis (TURN_AXIS_NAME);
 
@@ -101,11 +102,12 @@ namespace Tanks
 
         private void FixedUpdate()
         {
-            // TODO: Only allow owner of this tank to move it
+            // Only allow owner of this tank to move it
             if (!photonView.IsMine)
             {
                 return;
             }
+
             Move();
             Turn();
         }

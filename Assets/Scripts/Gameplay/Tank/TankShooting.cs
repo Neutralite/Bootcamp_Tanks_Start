@@ -20,7 +20,6 @@ namespace Tanks
 
         private PhotonView photonView;
 
-
         private float currentLaunchForce;
         private float chargeSpeed;
         private bool fired;
@@ -34,16 +33,18 @@ namespace Tanks
         private void Start()
         {
             photonView = GetComponent<PhotonView>();
+
             chargeSpeed = (maxLaunchForce - minLaunchForce) / maxChargeTime;
         }
 
         private void Update()
         {
-            // TODO: Only allow owner of this tank to shoot
+            // Only allow owner of this tank to shoot
             if (!photonView.IsMine)
             {
                 return;
             }
+
             aimSlider.value = minLaunchForce;
 
             if (currentLaunchForce >= maxLaunchForce && !fired)
@@ -75,8 +76,15 @@ namespace Tanks
         {
             fired = true;
 
-            // TODO: Instantiate the projectile on all clients
-            photonView.RPC("Fire",RpcTarget.All,fireTransform.position,fireTransform.rotation,currentLaunchForce * fireTransform.forward);
+            // Instantiate the projectile on all clients
+            photonView.RPC
+                (
+                "Fire",
+                RpcTarget.All,
+                fireTransform.position,
+                fireTransform.rotation,
+                currentLaunchForce * fireTransform.forward
+                );
 
             currentLaunchForce = minLaunchForce;
         }
@@ -89,7 +97,7 @@ namespace Tanks
 
             shootingAudio.clip = fireClip;
             shootingAudio.Play();
-
-        } 
+            
+        }
     }
 }

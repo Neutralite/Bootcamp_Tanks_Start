@@ -17,7 +17,7 @@ namespace Tanks
         public Color color;
     }
 
-    public class GameManager : MonoBehaviour,IOnEventCallback
+    public class GameManager : MonoBehaviour, IOnEventCallback
     {
         private const int ROUND_START_PHOTON_EVENT = 1;
         private const float MAX_DEPENETRATION_VELOCITY = float.PositiveInfinity;
@@ -64,7 +64,6 @@ namespace Tanks
         private void OnDisable()
         {
             PhotonNetwork.RemoveCallbackTarget(this);
-
         }
 
         private void SpawnPlayerTank()
@@ -114,7 +113,7 @@ namespace Tanks
 
             if (gameWinner != null)
             {
-                // TODO: Leave photon room
+                // Leave photon room
                 PhotonNetwork.LeaveRoom();
                 SceneManager.LoadScene("MainMenu");
             }
@@ -203,7 +202,7 @@ namespace Tanks
 
         public void OnEvent(EventData photonEvent)
         {
-            if (photonEvent.Code == TankHealth.TANK_DIED_PHOTON_EVENT)
+            if(photonEvent.Code == TankHealth.TANK_DIED_PHOTON_EVENT)
             {
                 StartCoroutine(HandleTankDeath());
             }

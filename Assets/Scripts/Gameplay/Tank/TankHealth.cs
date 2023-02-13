@@ -1,8 +1,8 @@
-﻿using ExitGames.Client.Photon;
-using Photon.Pun;
-using Photon.Realtime;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using Photon.Realtime;
+using Photon.Pun;
+using ExitGames.Client.Photon;
 
 namespace Tanks
 {
@@ -17,7 +17,7 @@ namespace Tanks
         public Color zeroHealthColor = Color.red;
         public GameObject explosionPrefab;
 
-        PhotonView photonView;
+        private PhotonView photonView;
 
         private AudioSource explosionAudio;
         private ParticleSystem explosionParticles;
@@ -36,7 +36,6 @@ namespace Tanks
         private void OnEnable()
         {
             PhotonNetwork.AddCallbackTarget(this);
-
             currentHealth = startingHealth;
             dead = false;
 
@@ -76,7 +75,7 @@ namespace Tanks
 
             PhotonNetwork.RaiseEvent(TANK_DIED_PHOTON_EVENT, photonView.Owner, raiseEventOptions, SendOptions.SendReliable);
 
-
+            
         }
 
         /// <summary>
@@ -84,7 +83,6 @@ namespace Tanks
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="info"></param>
-        /// <exception cref="System.NotImplementedException"></exception>
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
             if (stream.IsWriting)
@@ -101,15 +99,11 @@ namespace Tanks
         public void OnEvent(EventData photonEvent)
         {
             if (photonEvent.Code != TANK_DIED_PHOTON_EVENT)
-            {
                 return;
-            }
 
             var player = (Player)photonEvent.CustomData;
-            if (!Equals(photonView.Owner,player))
-            {
+            if (!Equals(photonView.Owner, player))
                 return;
-            }
 
             explosionParticles.transform.position = transform.position;
             explosionParticles.gameObject.SetActive(true);
