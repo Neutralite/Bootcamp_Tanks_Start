@@ -1,3 +1,4 @@
+using Photon.Pun;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -58,6 +59,7 @@ namespace Tanks
             PlayerPrefs.SetString("PlayerName", playerNameInput.text);
 
             // TODO: Update photon local player nickname
+            PhotonNetwork.LocalPlayer.NickName = playerNameInput.text;
         }
 
         private void SetSound(string id, bool newValue, Button disabledButton, Button enabledButton)

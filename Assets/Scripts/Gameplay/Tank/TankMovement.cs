@@ -8,6 +8,7 @@ namespace Tanks
     {
         private const string MOVEMENT_AXIS_NAME = "Vertical";
         private const string TURN_AXIS_NAME = "Horizontal";
+        private const string TURBO_BUTTON = "Turbo";
 
         public float speed = 12f;
         public float turnSpeed = 180f;
@@ -16,6 +17,12 @@ namespace Tanks
         public AudioClip engineDriving;
 		public float pitchRange = 0.2f;
 
+        [Header("Turbo Settings")]
+        public float turboSpeed = 18;
+        public float turboDuration = 1f;
+        public float turboCooldown = 5f;
+        public ParticleSystem turboParticles;
+
         private PhotonView photonView;
 
         private Rigidbody tankRigidbody;
@@ -23,6 +30,13 @@ namespace Tanks
         private float turnInputValue;
         private float originalPitch;
         private ParticleSystem[] particleSystems;
+
+        private float remainingTurboCooldown;
+        private float remainingTurboDuration;
+
+        private bool CanUseTurbo => remainingTurboCooldown <= 0;
+        private bool IsTurboActive => remainingTurboDuration > 0;
+        private float CurrentSpeed => IsTurboActive ? turboSpeed : speed;
 
         public void GotHit(float explosionForce, Vector3 explosionSource, float explosionRadius)
         {
@@ -62,6 +76,8 @@ namespace Tanks
 
         private void Update()
         {
+            UpdateTurbo();
+
             if (!photonView.IsMine)
             {
                 return;
@@ -71,6 +87,31 @@ namespace Tanks
             turnInputValue = Input.GetAxis (TURN_AXIS_NAME);
 
             EngineAudio();
+
+            TryUseTurbo();
+        }
+
+        private void UpdateTurbo()
+        {
+            remainingTurboDuration -= Time.deltaTime;
+
+            if(!IsTurboActive && turboParticles.isPlaying)
+            {
+                turboParticles.Stop();
+            }
+        }
+
+        private void TryUseTurbo()
+        {
+            remainingTurboCooldown -= Time.deltaTime;
+            if(!CanUseTurbo || !Input.GetButtonDown(TURBO_BUTTON))
+            {
+                return;
+            }
+
+            remainingTurboCooldown = turboCooldown;
+
+            photonView.RPC("Turbo", RpcTarget.All);
         }
 
         private void EngineAudio()
@@ -116,7 +157,7 @@ namespace Tanks
 
         private void Move()
         {
-            Vector3 movement = transform.forward * movementInputValue * speed * Time.deltaTime;
+            Vector3 movement = transform.forward * movementInputValue * CurrentSpeed * Time.deltaTime;
             tankRigidbody.MovePosition(tankRigidbody.position + movement);
         }
 
@@ -126,6 +167,15 @@ namespace Tanks
             Quaternion turnRotation = Quaternion.Euler (0f, turn, 0f);
 
             tankRigidbody.MoveRotation(tankRigidbody.rotation * turnRotation);
+        }
+
+        [PunRPC]
+        private void Turbo()
+        {
+            remainingTurboDuration = turboDuration;
+
+            turboParticles.Play();
+            Debug.Log("Particles playing");
         }
     }
 }
