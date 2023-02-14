@@ -15,6 +15,9 @@ GameObject:
   - component: {fileID: 5409530}
   - component: {fileID: 10833074}
   - component: {fileID: 11426614}
+  - component: {fileID: 7704015308163683039}
+  - component: {fileID: 2842382881974187401}
+  - component: {fileID: 7612067020671722296}
   m_Layer: 0
   m_Name: HomingMissile
   m_TagString: Untagged
@@ -191,15 +194,70 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af9894b7bced3a04c870ade3c621f94e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TankMask:
+  tankMask:
     serializedVersion: 2
-    m_Bits: 0
-  m_ExplosionParticles: {fileID: 0}
-  m_ExplosionAudio: {fileID: 0}
-  m_MaxDamage: 30
-  m_ExplosionForce: 1000
-  m_MaxLifeTime: 2
-  m_ExplosionRadius: 5
+    m_Bits: 512
+  explosionParticles: {fileID: 198540207889710882}
+  explosionAudio: {fileID: 82110601301053950}
+  maxDamage: 100
+  explosionForce: 1000
+  maxLifeTime: 2
+  explosionRadius: 5
+--- !u!114 &7704015308163683039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 192454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 2842382881974187401}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &2842382881974187401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 192454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
+--- !u!114 &7612067020671722296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 192454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c409575cb7fde440bc9e9554a162301, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  missileBody: {fileID: 5409530}
+  speed: 12
+  view: {fileID: 7704015308163683039}
+  shellExplosion: {fileID: 11426614}
 --- !u!1 &1291295503164410
 GameObject:
   m_ObjectHideFlags: 0

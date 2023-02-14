@@ -10636,6 +10636,7 @@ MonoBehaviour:
   minLaunchForce: 15
   maxLaunchForce: 30
   maxChargeTime: 0.75
+  homingMissileInstantiateOffset: 4
 --- !u!114 &3985643419294574805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10657,6 +10658,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 11409376}
   - {fileID: 8397617711370808497}
+  - {fileID: 8408796137855441791}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -10988,6 +10990,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79ea12656fd1d4f46ab6ff910ae62ae1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rotationSpeed: 150
 --- !u!1001 &6766428351582721616
 PrefabInstance:
   m_ObjectHideFlags: 0
