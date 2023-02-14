@@ -73,7 +73,6 @@ namespace Tanks
             {
                 Fire();
             }
-            TryFireHomingMissile();
         }
 
         private void TryFireHomingMissile()
