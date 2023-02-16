@@ -59,7 +59,7 @@ namespace Tanks
 
             PlayerPrefs.SetString("PlayerName", playerNameInput.text);
 
-            // TODO: Update photon local player nickname
+            // Update photon local player nickname
             PhotonNetwork.LocalPlayer.NickName = playerNameInput.text;
         }
 
