@@ -8,6 +8,7 @@ namespace Tanks
     {
         private const string FIRE_BUTTON = "Fire1";
         private const string HOMING_MISSILE_BUTTON = "Fire2";
+        private const string AIR_STRIKE_BUTTON = "Fire3";
 
         public Rigidbody shell;
         public Transform fireTransform;
@@ -20,6 +21,7 @@ namespace Tanks
         public float maxChargeTime = 0.75f;
 
         public float homingMissileInstantiateOffset = 4f;
+        public float airStrikeInstantiateOffset = 5f;
 
         private PhotonView photonView;
 
@@ -73,6 +75,10 @@ namespace Tanks
             {
                 Fire();
             }
+            if (Input.GetButtonDown(AIR_STRIKE_BUTTON))
+            {
+                AirStrike();
+            }
         }
 
         private void TryFireHomingMissile()
@@ -112,15 +118,20 @@ namespace Tanks
             }
         }
 
-        private bool GetClickPosition(out Vector2 clickPos)
+        private bool GetClickPosition(out Vector3 clickPos)
         {
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            var gotHit = Physics.Raycast(ray, out var hit, 1000, LayerMask.GetMask("Default"));
+            if(!Physics.Raycast(ray, out var hit, 1000, LayerMask.GetMask("Boundaries")))
+            {
+                var gotHit = Physics.Raycast(ray, out var hit2, 1000, LayerMask.GetMask("Default"));
 
-            clickPos = gotHit ? hit.point : Vector3.zero;
+                clickPos = gotHit ? hit2.point : Vector3.zero;
 
-            return gotHit;
+                return gotHit;
+            }
+            clickPos = Vector3.zero;
+            return false;
         }
 
         private void Fire()
@@ -138,6 +149,23 @@ namespace Tanks
                 );
 
             currentLaunchForce = minLaunchForce;
+        }
+
+        private void AirStrike()
+        {
+            Vector3 strikePoint;
+            if (GetClickPosition(out strikePoint))
+            {
+                // Instantiate the projectile on all clients
+                photonView.RPC
+                    (
+                    "Fire",
+                    RpcTarget.All,
+                    strikePoint + Vector3.up*airStrikeInstantiateOffset,
+                    Quaternion.Euler(90,0,0),
+                    Vector3.zero
+                    );
+            }
         }
 
         [PunRPC]

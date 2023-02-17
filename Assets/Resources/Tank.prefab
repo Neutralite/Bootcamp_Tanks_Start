@@ -10637,6 +10637,7 @@ MonoBehaviour:
   maxLaunchForce: 30
   maxChargeTime: 0.75
   homingMissileInstantiateOffset: 4
+  airStrikeInstantiateOffset: 5
 --- !u!114 &3985643419294574805
 MonoBehaviour:
   m_ObjectHideFlags: 0
