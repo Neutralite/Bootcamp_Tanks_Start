@@ -45,8 +45,6 @@ namespace Tanks
                 return;
             }
 
-            aimSlider.value = minLaunchForce;
-
             if (currentLaunchForce >= maxLaunchForce && !fired)
             {
                 currentLaunchForce = maxLaunchForce;
@@ -64,7 +62,7 @@ namespace Tanks
             {
                 currentLaunchForce += chargeSpeed * Time.deltaTime;
 
-                aimSlider.value = currentLaunchForce;
+                UpdateAimSlider();
             }
             else if (Input.GetButtonUp(FIRE_BUTTON) && !fired)
             {
@@ -87,6 +85,11 @@ namespace Tanks
                 );
 
             currentLaunchForce = minLaunchForce;
+            UpdateAimSlider();
+        }
+        private void UpdateAimSlider()
+        {
+            photonView.RPC("UpdateAimSlider", RpcTarget.All, currentLaunchForce);
         }
 
         [PunRPC]
@@ -98,6 +101,11 @@ namespace Tanks
             shootingAudio.clip = fireClip;
             shootingAudio.Play();
             
+        }
+        [PunRPC]
+        private void UpdateAimSlider(float value)
+        {
+            aimSlider.value = value;
         }
     }
 }

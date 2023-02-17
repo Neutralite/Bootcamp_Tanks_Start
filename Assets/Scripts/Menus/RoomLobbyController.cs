@@ -31,7 +31,7 @@ namespace Tanks
         private void AddLobbyEntry(Player player)
         {
             var entry = Instantiate(playerLobbyEntryPrefab, entriesHolder);
-            entry.Setup();
+            entry.Setup(player);
 
             // track created player lobby entries
             lobbyEntries.Add(player, entry);
